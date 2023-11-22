@@ -58,6 +58,7 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
           Positioned(
             top: 180,
             child: Container(
+              padding: const EdgeInsets.all(20),
               height: 280,
               width: MediaQuery.of(context).size.width - 50,
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -74,24 +75,96 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
               child: Column(
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Column(
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSignupScreen = false;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Text('LOGIN',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: !isSignupScreen
+                                        ? Palette.activeColor
+                                        : Palette.textColor1)),
+                            if (!isSignupScreen) //사인업이 선택되지 않으면 밑줄 보인다.
+                              Container(
+                                margin: const EdgeInsets.only(top: 3),
+                                height: 2,
+                                width: 55,
+                                color: Colors.orange,
+                              ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isSignupScreen = true;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Text(
+                              'SIGNUP',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: isSignupScreen
+                                      ? Palette.activeColor
+                                      : Palette.textColor1),
+                            ),
+                            if (isSignupScreen)
+                              Container(
+                                margin: const EdgeInsets.only(top: 3),
+                                height: 2,
+                                width: 55,
+                                color: Colors.orange,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    child: Form(
+                      child: Column(
                         children: [
-                          const Text('LOGIN'),
-                          Container(
-                            height: 2,
-                            width: 55,
-                            color: Colors.orange,
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.account_circle,
+                                color: Palette.iconColor,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.textColor1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(35),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.textColor1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(35),
+                                ),
+                              ),
+                              hintText: 'User name',
+                              hintStyle: TextStyle(
+                                  fontSize: 14, color: Palette.textColor1),
+                            ),
                           ),
                         ],
                       ),
-                      const Column(
-                        children: [
-                          Text(''),
-                          Text(''),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
