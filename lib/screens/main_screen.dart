@@ -28,31 +28,31 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                   fit: BoxFit.fill,
                 ),
               ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Welcome ',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    Row(
+                      children: [
+                        Text(
+                          'Welcome ',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                        ),
+                        Text(
+                          'to Yummy Chat!',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
                     ),
-                    Text(
-                      'to Yummy Chat!',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    SizedBox(height: 10),
+                    Text('Singup or Login to continue')
                   ],
                 ),
-                SizedBox(height: 10),
-                Text('Singup or Login to continue')
-              ],
+              ),
             ),
           ),
           Positioned(
@@ -132,6 +132,7 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                     ],
                   ),
                   Container(
+                    margin: const EdgeInsets.only(top: 20),
                     child: Form(
                       child: Column(
                         children: [
@@ -160,6 +161,65 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                               hintText: 'User name',
                               hintStyle: TextStyle(
                                   fontSize: 14, color: Palette.textColor1),
+                              contentPadding: EdgeInsets.all(10), //내용주위폭
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.email,
+                                color: Palette.iconColor,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.textColor1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(35),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.textColor1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(35),
+                                ),
+                              ),
+                              hintText: 'email',
+                              hintStyle: TextStyle(
+                                  fontSize: 14, color: Palette.textColor1),
+                              contentPadding: EdgeInsets.all(10), //내용주위폭
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Palette.iconColor,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.textColor1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(35),
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Palette.textColor1,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(35),
+                                ),
+                              ),
+                              hintText: 'password',
+                              hintStyle: TextStyle(
+                                  fontSize: 14, color: Palette.textColor1),
+                              contentPadding: EdgeInsets.all(10), //내용주위폭
                             ),
                           ),
                         ],
