@@ -10,6 +10,19 @@ class LoginSingupScreen extends StatefulWidget {
 
 class _LoginSingupScreenState extends State<LoginSingupScreen> {
   bool isSignupScreen = true;
+  final _formKey = GlobalKey<FormState>();
+  String userName = '';
+  String email = '';
+  String password = '';
+
+  void runValidation() {
+    bool isValid = _formKey.currentState!.validate();
+    // validate함수는 validator 에서 null을 리턴할 때만 true를 반환한다.
+    if (isValid) {
+      _formKey.currentState!.save();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,10 +157,21 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: Form(
+                      key: _formKey,
                       child: Column(
                         children: [
                           if (isSignupScreen)
                             TextFormField(
+                              key: const ValueKey(1),
+                              validator: (value) {
+                                if (value!.isEmpty || value.length < 4) {
+                                  return 'Please enter at least 4 characters';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                userName = value!;
+                              },
                               decoration: const InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.account_circle,
@@ -177,6 +201,18 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                             ),
                           const SizedBox(height: 8),
                           TextFormField(
+                            key: const ValueKey(2),
+                            validator: (value) {
+                              if (value!.isEmpty || value.length < 4) {
+                                return 'Please enter at least 4 characters';
+                              } else if (!value.contains('@')) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              email = value!;
+                            },
                             decoration: const InputDecoration(
                               prefixIcon: Icon(
                                 Icons.email,
@@ -206,6 +242,16 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                           ),
                           const SizedBox(height: 8),
                           TextFormField(
+                            key: const ValueKey(3),
+                            validator: (value) {
+                              if (value!.isEmpty || value.length < 6) {
+                                return 'Password must be at least 6 characters long';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              password = value!;
+                            },
                             decoration: const InputDecoration(
                               prefixIcon: Icon(
                                 Icons.lock,
@@ -242,7 +288,9 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
             ),
           ),
           //텍스트 폼 필드
-          Positioned(
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeIn,
             top: isSignupScreen ? 450 : 420,
             right: 0,
             left: 0,
@@ -258,30 +306,38 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                     BoxShadow(
                         color: const Color.fromARGB(255, 139, 137, 137)
                             .withOpacity(0.3),
-                        spreadRadius: 4,
-                        blurRadius: 4,
-                        offset: const Offset(0, 2)),
+                        spreadRadius: 5,
+                        blurRadius: 5,
+                        offset: const Offset(1, 3)),
                   ],
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    gradient: const LinearGradient(
-                      colors: [Colors.orange, Colors.red],
-                      begin: Alignment.topLeft, // 그라디언트 방향
-                      end: Alignment.bottomRight,
+                child: GestureDetector(
+                  onTap: () {
+                    runValidation();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Colors.orange,
+                          Color.fromARGB(255, 226, 17, 2)
+                        ],
+                        begin: Alignment.topLeft, // 그라디언트 방향
+                        end: Alignment.bottomRight,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            spreadRadius: 2,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1)),
+                      ],
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 1)),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
+                    child: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
