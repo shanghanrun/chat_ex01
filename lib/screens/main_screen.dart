@@ -30,36 +30,46 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
               ),
               child: Container(
                 padding: const EdgeInsets.fromLTRB(20, 100, 0, 0),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Welcome ',
-                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          style: TextStyle(color: Colors.white, fontSize: 23),
                         ),
                         Text(
-                          'to Yummy Chat!',
-                          style: TextStyle(
+                          isSignupScreen ? 'to Yummy Chat!' : ' back',
+                          style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 23,
                               fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
-                    Text('Singup or Login to continue')
+                    const SizedBox(height: 10),
+                    Text(
+                      isSignupScreen
+                          ? 'Singup to continue'
+                          : 'Login to continue',
+                      style: const TextStyle(fontSize: 20),
+                    )
                   ],
                 ),
               ),
             ),
           ),
-          Positioned(
-            top: 180,
-            child: Container(
+          //배경
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeIn,
+            top: 200,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeIn,
               padding: const EdgeInsets.all(20),
-              height: 280,
+              height: isSignupScreen ? 280 : 250,
               width: MediaQuery.of(context).size.width - 50,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
@@ -136,34 +146,35 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                     child: Form(
                       child: Column(
                         children: [
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.account_circle,
-                                color: Palette.iconColor,
+                          if (isSignupScreen)
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.account_circle,
+                                  color: Palette.iconColor,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Palette.textColor1,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(35),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Palette.textColor1,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(35),
+                                  ),
+                                ),
+                                hintText: 'User name',
+                                hintStyle: TextStyle(
+                                    fontSize: 14, color: Palette.textColor1),
+                                contentPadding: EdgeInsets.all(10), //내용주위폭
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Palette.textColor1,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(35),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Palette.textColor1,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(35),
-                                ),
-                              ),
-                              hintText: 'User name',
-                              hintStyle: TextStyle(
-                                  fontSize: 14, color: Palette.textColor1),
-                              contentPadding: EdgeInsets.all(10), //내용주위폭
                             ),
-                          ),
                           const SizedBox(height: 8),
                           TextFormField(
                             decoration: const InputDecoration(
@@ -228,6 +239,77 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          //텍스트 폼 필드
+          Positioned(
+            top: isSignupScreen ? 450 : 420,
+            right: 0,
+            left: 0,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                height: 90,
+                width: 90,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                        color: const Color.fromARGB(255, 139, 137, 137)
+                            .withOpacity(0.3),
+                        spreadRadius: 4,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2)),
+                  ],
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    gradient: const LinearGradient(
+                      colors: [Colors.orange, Colors.red],
+                      begin: Alignment.topLeft, // 그라디언트 방향
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                          offset: const Offset(0, 1)),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          //전송버튼
+          Positioned(
+            top: MediaQuery.of(context).size.height - 200,
+            right: 0,
+            left: 0,
+            child: Column(
+              children: [
+                Text(isSignupScreen ? 'or SignUp with' : 'or Login with'),
+                const SizedBox(height: 15),
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                  label: const Text('Google'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Palette.googleColor,
+                    minimumSize: const Size(155, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
         ],
