@@ -32,6 +32,7 @@ class _NewMessageState extends State<NewMessage> {
           Expanded(
               child: TextField(
                   controller: textController,
+                  maxLines: null,
                   decoration: const InputDecoration(
                     labelText: 'Send a message...',
                   ),
