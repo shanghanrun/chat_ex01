@@ -24,7 +24,8 @@ class _NewMessageState extends State<NewMessage> {
       'text': message,
       'time': Timestamp.now(),
       'userId': user!.uid,
-      'userName': userData.data()!['userName']
+      'userName': userData.data()!['userName'],
+      'userImage': userData.data()!['image']
     });
     // textController.text = '';
     textController.clear(); // 자판도 사라지게 함

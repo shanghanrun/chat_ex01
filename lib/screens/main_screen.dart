@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class LoginSingupScreen extends StatefulWidget {
   const LoginSingupScreen({super.key});
@@ -82,13 +83,13 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                             const Text(
                               'Welcome ',
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 23),
+                                  TextStyle(color: Colors.white, fontSize: 15),
                             ),
                             Text(
                               isSignupScreen ? 'to Yummy Chat!' : ' back',
                               style: const TextStyle(
                                   color: Colors.white,
-                                  fontSize: 23,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -384,25 +385,37 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                           showSpinner = true;
                         });
                         if (isSignupScreen) {
-                          // if (userPickedImage == null) {
-                          //   setState(() {
-                          //     showSpinner = false;
-                          //   });
-                          //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          //     content: Text('Please pick your image'),
-                          //     backgroundColor: Colors.blue,
-                          //   ));
-                          //   return; // 진행을 멈추게 한다.
-                          // }
+                          if (userPickedImage == null) {
+                            setState(() {
+                              showSpinner = false;
+                            });
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Please pick your image'),
+                              backgroundColor: Colors.blue,
+                            ));
+                            return; // 진행을 멈추게 한다.
+                          }
                           runValidation();
                           try {
                             final newUser =
                                 await _auth.createUserWithEmailAndPassword(
                                     email: email, password: password);
+                            final refImage = FirebaseStorage.instance
+                                .ref()
+                                .child('avatar_image')
+                                .child('${newUser.user!.uid}.png');
+
+                            await refImage.putFile(userPickedImage!);
+                            final url = await refImage.getDownloadURL();
                             await FirebaseFirestore.instance
                                 .collection('user')
                                 .doc(newUser.user!.uid)
-                                .set({'userName': userName, 'email': email});
+                                .set({
+                              'userName': userName,
+                              'email': email,
+                              'image': url
+                            });
                             if (newUser.user != null) {
                               Navigator.push(
                                   context,
@@ -415,17 +428,17 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                             }
                           } catch (e) {
                             print(e);
-                            // if (mounted) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content:
-                                  Text('Please check your email and password'),
-                              backgroundColor: Colors.black,
-                            ));
-                            setState(() {
-                              showSpinner = false;
-                            });
-                            // }
+                            if (mounted) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text(
+                                    'Please check your email and password'),
+                                backgroundColor: Colors.black,
+                              ));
+                              setState(() {
+                                showSpinner = false;
+                              });
+                            }
                           }
                         } else {
                           // SignupScreen이 아닌 경우 = LoginScreen
