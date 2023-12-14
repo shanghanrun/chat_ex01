@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:chat_ex01/add_image/add_image.dart';
 import 'package:chat_ex01/config/palette.dart';
 import 'package:chat_ex01/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +23,11 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
   String userName = '';
   String email = '';
   String password = '';
+  File? userPickedImage;
+
+  void addImage(File image) {
+    userPickedImage = image;
+  }
 
   void runValidation() {
     bool isValid = _formKey.currentState!.validate();
@@ -27,6 +35,17 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
     if (isValid) {
       _formKey.currentState!.save(); //onSaved: 작동시킨다.
     }
+  }
+
+  void showAlert(context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            backgroundColor: Colors.white,
+            child: AddImage(addImage),
+          );
+        });
   }
 
   @override
@@ -148,20 +167,37 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                               },
                               child: Column(
                                 children: [
-                                  Text(
-                                    'SIGNUP',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: isSignupScreen
-                                            ? Palette.activeColor
-                                            : Palette.textColor1),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'SIGNUP',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: isSignupScreen
+                                                ? Palette.activeColor
+                                                : Palette.textColor1),
+                                      ),
+                                      const SizedBox(width: 15),
+                                      if (isSignupScreen)
+                                        GestureDetector(
+                                          onTap: () {
+                                            showAlert(context);
+                                          },
+                                          child: Icon(
+                                            Icons.image,
+                                            color: isSignupScreen
+                                                ? Colors.cyan
+                                                : Colors.grey[300],
+                                          ),
+                                        ),
+                                    ],
                                   ),
                                   if (isSignupScreen)
                                     Container(
                                       margin: const EdgeInsets.only(top: 3),
                                       height: 2,
-                                      width: 55,
+                                      width: 100,
                                       color: Colors.orange,
                                     ),
                                 ],
@@ -348,6 +384,16 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                           showSpinner = true;
                         });
                         if (isSignupScreen) {
+                          // if (userPickedImage == null) {
+                          //   setState(() {
+                          //     showSpinner = false;
+                          //   });
+                          //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //     content: Text('Please pick your image'),
+                          //     backgroundColor: Colors.blue,
+                          //   ));
+                          //   return; // 진행을 멈추게 한다.
+                          // }
                           runValidation();
                           try {
                             final newUser =
@@ -369,12 +415,17 @@ class _LoginSingupScreenState extends State<LoginSingupScreen> {
                             }
                           } catch (e) {
                             print(e);
+                            // if (mounted) {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
                               content:
                                   Text('Please check your email and password'),
                               backgroundColor: Colors.black,
                             ));
+                            setState(() {
+                              showSpinner = false;
+                            });
+                            // }
                           }
                         } else {
                           // SignupScreen이 아닌 경우 = LoginScreen

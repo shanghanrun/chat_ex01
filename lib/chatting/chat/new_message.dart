@@ -13,11 +13,19 @@ class _NewMessageState extends State<NewMessage> {
   final textController = TextEditingController();
   var message = '';
   final user = FirebaseAuth.instance.currentUser;
-  void sendMessage() {
+
+  void sendMessage() async {
     FocusScope.of(context).unfocus();
-    FirebaseFirestore.instance
-        .collection('chat')
-        .add({'text': message, 'time': Timestamp.now(), 'userId': user!.uid});
+    final userData = await FirebaseFirestore.instance
+        .collection('user')
+        .doc(user!.uid)
+        .get();
+    FirebaseFirestore.instance.collection('chat').add({
+      'text': message,
+      'time': Timestamp.now(),
+      'userId': user!.uid,
+      'userName': userData.data()!['userName']
+    });
     // textController.text = '';
     textController.clear(); // 자판도 사라지게 함
   }

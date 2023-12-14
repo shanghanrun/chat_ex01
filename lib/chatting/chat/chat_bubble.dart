@@ -1,37 +1,77 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_bubble/bubble_type.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_8.dart';
 
-class ChatBubble extends StatelessWidget {
+class ChatBubbles extends StatelessWidget {
   final String message;
+  final String userName;
   final bool isMe;
-  const ChatBubble(this.message, this.isMe, {super.key});
+  const ChatBubbles(this.message, this.userName, this.isMe, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        Container(
-          decoration: BoxDecoration(
-            // border:Border.all(width:1, color:Colors.grey),
-            borderRadius: BorderRadius.only(
-              topRight: const Radius.circular(12),
-              topLeft: const Radius.circular(12),
-              bottomRight:
-                  isMe ? const Radius.circular(0) : const Radius.circular(12),
-              bottomLeft:
-                  isMe ? const Radius.circular(12) : const Radius.circular(0),
+        if (isMe)
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: ChatBubble(
+              clipper: ChatBubbleClipper8(type: BubbleType.sendBubble),
+              alignment: Alignment.topRight,
+              margin: const EdgeInsets.only(top: 20),
+              backGroundColor: Colors.green,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,
+                ),
+                child: Column(
+                  // crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      userName,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      message,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            color: isMe ? Colors.green : Colors.yellow,
           ),
-          width: 220,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: Text(
-            message,
-            style: TextStyle(
-                fontSize: 20, color: isMe ? Colors.black : Colors.blue[900]),
-          ),
-        ),
+        if (!isMe)
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: ChatBubble(
+              clipper: ChatBubbleClipper8(type: BubbleType.receiverBubble),
+              backGroundColor: const Color(0xffE7E7ED),
+              margin: const EdgeInsets.only(top: 20),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      userName,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      message,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )
       ],
     );
   }
